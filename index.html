@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TNO AI OCR Add Rows Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 
+        This demo showcases a script that automates adding and filling rows in a form.
+        The main logic is in `script.js`, which is heavily commented to explain its functionality.
+        The styles are defined in `style.css` for better organization.
+    -->
+    <h1>Demo: Add Multiple Non-Stock Rows</h1>
+    <p>This demo simulates adding rows to a purchase order form. The included JavaScript will automatically add and fill 10 rows on page load.</p>
+
+    <div class="controls">
+        <button type="button" id="ai-ocr-UploadBtn">OCR Upload</button>
+    </div>
+
+    <form id="poForm">
+        <table id="rowsTable">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Brand</th>
+                    <th>Short Desc</th>
+                    <th>Long Desc</th>
+                    <th>UOM</th>
+                    <th>Qty</th>
+                    <th>Unit List</th>
+                    <th>Disc %</th>
+                    <th>Unit Price</th>
+                    <th>Amount</th>
+                    <th>Unit w/GST</th>
+                    <th>Conv</th>
+                    <th>Qty UOM Stk</th>
+                    <th>UPrice UOM Stk</th>
+                    <th>UOM Stk</th>
+                    <th>GST</th>
+                    <th>Acct Disp</th>
+                    <th>Dept Disp</th>
+                    <th>Proj Disp</th>
+                    <th>Rqt Day</th>
+                    <th>Rqt Mth</th>
+                    <th>Rqt Yr</th>
+                    <th>Batch Num</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- This initial row serves as a template for the script. -->
+                <tr id="rowtr1">
+                    <td><input name="stkcode_code1" type="text"></td>
+                    <td><input name="stkcode_brand1" type="text"></td>
+                    <td><input name="stkcode_desc1" type="text"></td>
+                    <td><input name="desc1" type="text"></td>
+                    <td><input name="uom_trans_code1_disp" type="text"></td>
+                    <td><input name="qnty_total1" type="number"></td>
+                    <td><input name="fmi_aup1_disp" type="number" step="0.01"></td>
+                    <td><input name="discount_pct1" type="number" step="0.01"></td>
+                    <td><input name="price_unitrate_forex1" type="number" step="0.01"></td>
+                    <td><input name="extnamt_orig_forex1" type="number" step="0.01"></td>
+                    <td><input name="uprice_wt_gst1" type="number" step="0.01"></td>
+                    <td><input name="uom_trans_code1_conv" type="number"></td>
+                    <td><input name="qnty_uomstk1" type="number"></td>
+                    <td><input name="uprice_uomstk1" type="number" step="0.01"></td>
+                    <td><input name="uomstk_code1" type="text"></td>
+                    <td><input name="fmi_row_gst1" type="checkbox"></td>
+                    <td><input name="fmi_row_acctnum1_disp" type="text"></td>
+                    <td><input name="fmi_row_deptunit1_disp" type="text"></td>
+                    <td><input name="fmi_row_entprojfn1_disp" type="text"></td>
+                    <td><input name="rowday1" type="text"></td>
+                    <td><input name="rowmth1" type="text"></td>
+                    <td><input name="rowyear1" type="text"></td>
+                    <td><input name="batchnum_code1" type="text"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" id="gononstockbtn">Add Non-Stock Row</button>
+        <input type="hidden" name="HddenMaxRowAdded" value="1">
+    </form>
+
+    <!-- OCR modal and loading overlay are now injected by ocr.js to reduce HTML markup -->
+
+    <!--
+        The inline script below provides a simple way to manually add new rows for testing.
+        This is separate from the main automation script.
+    -->
+    <script>
+        /**
+         * This script handles the manual "Add Non-Stock Row" button clicks.
+         * It adds a new, empty row to the table.
+         */
+        document.getElementById('gononstockbtn').addEventListener('click', function() {
+            const hiddenInput = document.querySelector('input[name="HddenMaxRowAdded"]');
+            let rowCount = hiddenInput ? parseInt(hiddenInput.value, 10) : 1;
+            rowCount++;
+
+            const tableBody = document.querySelector('#rowsTable tbody');
+            const newRow = document.createElement('tr');
+            newRow.id = `rowtr${rowCount}`;
+
+            const columns = [
+                'stkcode_code', 'stkcode_brand', 'stkcode_desc', 'desc', 'uom_trans_code_disp',
+                'qnty_total', 'fmi_aup_disp', 'discount_pct', 'price_unitrate_forex', 'extnamt_orig_forex',
+                'uprice_wt_gst', 'uom_trans_code_conv', 'qnty_uomstk', 'uprice_uomstk', 'uomstk_code',
+                'fmi_row_gst', 'fmi_row_acctnum_disp', 'fmi_row_deptunit_disp', 'fmi_row_entprojfn_disp',
+                'rowday', 'rowmth', 'rowyear', 'batchnum_code'
+            ];
+
+            newRow.innerHTML = columns.map(colName => {
+                const name = `${colName}${rowCount}`;
+                const inputType = colName.includes('gst') ? 'checkbox' : (colName.includes('qnty') || colName.includes('price') || colName.includes('amt')) ? 'number' : 'text';
+                const stepAttr = (inputType === 'number') ? 'step="0.01"' : '';
+                return `<td><input name="${name}" type="${inputType}" ${stepAttr}></td>`;
+            }).join('');
+
+            tableBody.appendChild(newRow);
+            hiddenInput.value = rowCount;
+        });
+    </script>
+    
+    <!-- The main script for automating row addition and filling. -->
+    <script src="add_rows.js"></script>
+    <script src="ocr.js"></script>
+
+    <!-- This inline script generates and adds 10 sample rows on page load for demonstration. -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // A small, readable collection of sample products to make the demo data more realistic.
+            const SAMPLE_PRODUCTS = [
+                { brand: 'Logitech', desc: 'MX Master 3S Wireless Mouse', price: 169.00, uom: 'PC' },
+                { brand: 'Dell', desc: 'UltraSharp U2723QE 27" 4K Monitor', price: 779.00, uom: 'UNIT' },
+                { brand: 'Apple', desc: 'MacBook Pro 14" M3 Pro', price: 3299.00, uom: 'UNIT' },
+                { brand: 'CalDigit', desc: 'TS4 Thunderbolt 4 Dock', price: 650.00, uom: 'PC' },
+                { brand: 'Keychron', desc: 'Q1 Pro QMK/VIA Mechanical Keyboard', price: 315.00, uom: 'PC' }
+            ];
+
+            /**
+             * Generates a complete, realistic sample row object based on a product definition.
+             * @param {number} rowIndex - The index for the row (1-based).
+             * @returns {object} The formatted row data object for the `$addRows` function.
+             */
+            const makeSampleRow = (rowIndex) => {
+                // Select a product from the sample list, cycling through them for variety.
+                const product = SAMPLE_PRODUCTS[(rowIndex - 1) % SAMPLE_PRODUCTS.length];
+                
+                // Define dynamic properties for this specific row.
+                const quantity = rowIndex % 3 + 1; // Cycle quantity between 1, 2, 3
+                const discountPercentage = (rowIndex % 4) * 5; // Cycle discount 0%, 5%, 10%, 15%
+                const gstRate = 0.09; // 9% GST
+
+                // --- Calculations ---
+                const unitListPrice = product.price;
+                const unitPriceAfterDiscount = unitListPrice * (1 - discountPercentage / 100);
+                const totalAmount = unitPriceAfterDiscount * quantity;
+                const unitPriceWithGst = unitPriceAfterDiscount * (1 + gstRate);
+
+                // --- Return the structured row object, formatted for the form filler ---
+                return {
+                    // Product Info
+                    code: `NS-${String(rowIndex).padStart(3, '0')}`,
+                    brand: product.brand,
+                    desc_short: product.desc,
+                    desc_long: `Remark for ${product.desc} (Row ${rowIndex})`,
+                    
+                    // Quantity and UOM
+                    uom: product.uom,
+                    qty: String(quantity),
+                    conv: '1',
+                    qty_uomstk: String(quantity),
+                    uomstk: product.uom,
+
+                    // Pricing
+                    unit_list: unitListPrice.toFixed(2),
+                    disc_pct: String(discountPercentage),
+                    unit_price: unitPriceAfterDiscount.toFixed(2),
+                    amount: totalAmount.toFixed(2),
+                    
+                    // GST and Stock Pricing
+                    gst: true,
+                    unit_w_gst: unitPriceWithGst.toFixed(2),
+                    uprice_uomstk: unitListPrice.toFixed(2),
+
+                    // Financial Codes (example static values)
+                    acct_disp: '410100100 SALES - EQUIPMENT',
+                    dept_disp: 'MANAGEMENT MGMT',
+                    proj_disp: 'AIA Jurong East Building AIA-JE',
+
+                    // Request Date (example static values)
+                    rqt_day: '01',
+                    rqt_mth: '01',
+                    rqt_yr: '2025',
+
+                    // Batch Info
+                    batchnum: `BATCH-${String(rowIndex).padStart(4, '0')}`
+                };
+            };
+
+            // On page load, generate and add 10 sample rows to the form.
+            if (typeof window.$addRows === 'function') {
+                const sampleRows = Array.from({ length: 10 }, (_, i) => makeSampleRow(i + 1));
+                window.$addRows(sampleRows);
+            } else {
+                console.error('$addRows function not found. Ensure script.js is loaded correctly.');
+            }
+        });
+    </script>
+</body>
+</html>
