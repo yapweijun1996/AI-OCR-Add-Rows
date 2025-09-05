@@ -18,7 +18,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiOcrLoadingOverlay = document.getElementById('ai-ocr-loading-overlay');
 
     let uploadedFiles = [];
-    const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY'; // <-- IMPORTANT: Replace with your API key
+    let geminiApiKey = ''; // Will be populated on-demand
+
+    // ==========================================================================================
+    // SECTION: API Key Handling
+    // ==========================================================================================
+
+    /**
+     * Retrieves the Gemini API key, first from session storage, then by prompting the user.
+     * The key is stored in session storage to persist for the duration of the browser session.
+     * @returns {string|null} The API key or null if the user cancels the prompt.
+     */
+    function getApiKey() {
+        const storedKey = sessionStorage.getItem('geminiApiKey');
+        if (storedKey) {
+            return storedKey;
+        }
+
+        const userKey = prompt('Please enter your Gemini API key:');
+        if (userKey) {
+            sessionStorage.setItem('geminiApiKey', userKey);
+            return userKey;
+        }
+        
+        return null; // User cancelled or entered nothing
+    }
 
     // ==========================================================================================
     // SECTION: Style and UI Injection (to make the script a self-contained library)
@@ -274,8 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY') {
-            alert('Please replace "YOUR_GEMINI_API_KEY" with your actual Gemini API key in ocr.js.');
+        geminiApiKey = getApiKey();
+        if (!geminiApiKey) {
+            alert('A valid Gemini API key is required to proceed.');
             return;
         }
 
@@ -424,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     async function getOcrResults(files) {
         const selectedModel = document.getElementById('ai-ocr-model-select').value;
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${GEMINI_API_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${geminiApiKey}`;
         let retries = 3;
 
         const requests = files.map(file => {
