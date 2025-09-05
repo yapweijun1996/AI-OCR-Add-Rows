@@ -168,8 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="ai-ocr-controls">
                         <label for="ai-ocr-model-select">Select AI Model:</label>
                         <select id="ai-ocr-model-select">
-                            <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (Fast)</option>
                             <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite (Fastest)</option>
+                            <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (Fast)</option>
                             <option value="gemma-3-27b-it">Gemma 3 27B (Quality)</option>
                             <option value="gemma-3-12b-it">Gemma 3 12B (Balanced)</option>
                         </select>
