@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiOcrLoadingOverlay = document.getElementById('ai-ocr-loading-overlay');
 
     let uploadedFiles = [];
-    const GEMINI_API_KEY = 'AIzaSyCWFGa1uHzq4mzMi52Nao_k_0SmsctDbx4'; // <-- IMPORTANT: Replace with your API key
+    const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY'; // <-- IMPORTANT: Replace with your API key
 
     // ==========================================================================================
     // SECTION: Style and UI Injection (to make the script a self-contained library)
