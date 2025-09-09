@@ -36,10 +36,15 @@
     </style>
 </head>
 <body>
-    <!-- 
-        This demo showcases a script that automates adding and filling rows in a form.
-        The main logic is in `script.js`, which is heavily commented to explain its functionality.
-        The styles are defined in `style.css` for better organization.
+    <!--
+        This demo automates adding and filling rows in a form.
+        Runtime logic is provided as a single-file library (ai-ocr-library.js),
+        or you can load the individual scripts if preferred:
+          - ocr-utils.js (normalization)
+          - csv-import.js (CSV importer)
+          - add_rows.js (form filler)
+          - ocr.js (OCR modal + flow)
+        No bundler or Node.js required.
     -->
     <h1>Demo: Add Multiple Non-Stock Rows</h1>
     <p>This demo simulates adding rows to a purchase order form. The included JavaScript will automatically add and fill 10 rows on page load.</p>
@@ -150,18 +155,16 @@
         });
     </script>
     
-    <!-- The main script for automating row addition and filling. -->
-    <script src="add_rows.js"></script>
-    <!-- Shared normalization utilities for both OCR and CSV flows -->
-    <script src="ocr-utils.js"></script>
-    <!-- CSV importer with header mapping -->
-    <script src="csv-import.js"></script>
-    <!-- OCR UI and client -->
-    <script src="ocr.js"></script>
+    <!-- Single-file library (no bundler needed) -->
+    <script src="ai-ocr-library.js"></script>
 
     <!-- This inline script generates and adds 10 sample rows on page load for demonstration. -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Ensure loader has finished so window.$addRows exists
+            if (window.AI_OCR && window.AI_OCR._loader) {
+                try { await window.AI_OCR._loader; } catch (e) { console.error('AI OCR loader failed:', e); }
+            }
             // A small, readable collection of sample products to make the demo data more realistic.
             const SAMPLE_PRODUCTS = [
                 { brand: 'Logitech', desc: 'MX Master 3S Wireless Mouse', price: 169.00, uom: 'PC' },
@@ -237,7 +240,7 @@
                 const sampleRows = Array.from({ length: 10 }, (_, i) => makeSampleRow(i + 1));
                 window.$addRows(sampleRows);
             } else {
-                console.error('$addRows function not found. Ensure script.js is loaded correctly.');
+                console.error('$addRows function not found. Ensure ai-ocr-library.js is loaded correctly.');
             }
         });
     </script>

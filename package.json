@@ -1,0 +1,23 @@
+{
+  "name": "ai-ocr-add-rows",
+  "version": "1.0.0",
+  "description": "This project is a web-based demonstration of an AI-powered Optical Character Recognition (OCR) tool designed to automate data entry for purchase order forms. It allows users to upload images of documents, extracts line-item data using the Google Gemini API, and automatically populates a web form with the extracted information.",
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yapweijun1996/AI-OCR-Add-Rows.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yapweijun1996/AI-OCR-Add-Rows/issues"
+  },
+  "homepage": "https://github.com/yapweijun1996/AI-OCR-Add-Rows#readme",
+  "scripts": {},
+  "devDependencies": {},
+  "meta": {
+    "serverless": true,
+    "note": "Node.js not required; open index.html directly in your browser."
+  }
+}
