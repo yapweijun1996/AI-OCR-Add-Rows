@@ -1,5 +1,5 @@
 /**
- * @file TNO AI OCR Add Rows Demo Script
+ * @file AI OCR Add Rows Demo Script
  * @description This script provides functionality to automate the addition of multiple non-stock rows in a web form.
  * It defines a global function `window.$addRows` and immediately invokes it to add 10 sample rows.
  *
