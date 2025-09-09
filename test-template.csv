@@ -1,0 +1,4 @@
+code,brand,desc_short,desc_long,uom,qty,unit_list,disc_pct,unit_price,amount,unit_w_gst,conv,qty_uomstk,uprice_uomstk,uomstk,gst,acct_disp,dept_disp,proj_disp,rqt_day,rqt_mth,rqt_yr,batchnum
+ABC123,Acme,Widget 10mm,High tensile widget 10mm,EA,10,1.50,0,1.50,15.00,1.61,1,10,1.50,EA,1,S-100,D-20,P-03,05,09,2025,B123
+XYZ-987,,Bolt M5,Stainless Steel Bolt M5x20mm,PC,100,0.20,,0.20,20.00,,1,100,0.20,PC,0,,,,,,, 
+G-550,Generic,Grease Lubricant,High-performance synthetic grease. Temp range: -40C to 150C.,TUBE,2,25.00,10,22.50,45.00,48.15,1,2,22.50,TUBE,1,,,,15,10,2025,

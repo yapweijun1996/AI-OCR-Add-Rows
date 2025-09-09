@@ -470,15 +470,24 @@
     /**
      * Public API to add multiple rows to the form.
      * @param {Array<object>} rows - An array of row data objects.
+     * @param {{ onProgress?: (current:number, total:number) => void }} [options] - Optional hooks.
      * @returns {Promise<Array<number|null>>} A list of the new row IDs.
      */
-    window.$addRows = async function (rows) {
+    window.$addRows = async function (rows, options) {
         if (!Array.isArray(rows) || rows.length === 0) {
             console.warn('Pass an array of row objects to $addRows([...]).');
             return [];
         }
+        const total = rows.length;
+        const onProgress = options && typeof options.onProgress === 'function' ? options.onProgress : null;
+
         const newRowIds = [];
+        let index = 0;
         for (const payload of rows) {
+            index++;
+            if (onProgress) {
+                try { onProgress(index, total); } catch (_) {}
+            }
             const newRowId = await addOneRowAndFill(payload || {});
             newRowIds.push(newRowId);
             await sleep(60);
